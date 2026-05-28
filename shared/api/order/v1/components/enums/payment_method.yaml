@@ -1,0 +1,14 @@
+type: string
+description: Способ оплаты (если оплачен)
+enum:
+  - PAYMENT_METHOD_UNKNOWN
+  - PAYMENT_METHOD_CARD
+  - PAYMENT_METHOD_SBP
+  - PAYMENT_METHOD_CREDIT_CARD
+  - PAYMENT_METHOD_INVESTOR_MONEY
+x-enum-descriptions:
+  - Неизвестный способ
+  - Банковская карта
+  - Система быстрых платежей
+  - Кредитная карта
+  - Деньги инвестора

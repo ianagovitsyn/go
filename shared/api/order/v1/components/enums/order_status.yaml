@@ -1,0 +1,6 @@
+type: string
+description: Статус (PENDING_PAYMENT, PAID, CANCELLED)
+enum:
+  - PENDING_PAYMENT
+  - PAID
+  - CANCELLED

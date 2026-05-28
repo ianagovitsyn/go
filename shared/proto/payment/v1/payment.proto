@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+// Package payment.v1 Сервис оплаты заказов симулирует работу платёжного шлюза. Он не сохраняет состояние, а просто принимает команду на оплату, генерирует UUID транзакции, печатает его в консоль и возвращает вызывающей стороне.
+package payment.v1;
+
+option go_package = "github.com/ianagovitsyn/project/shared/pkg/proto/payment/v1;payment_v1";
+
+// PaymentService симулирует работу платёжного шлюза. Он не сохраняет состояние, а просто принимает команду на оплату, генерирует UUID транзакции, печатает его в консоль и возвращает вызывающей стороне.
+service PaymentService {
+  // PayOrder обрабатывает команду на оплату и возвращает transaction_uuid.
+  rpc PayOrder(PayOrderRequest) returns (PayOrderResponse);
+}
+
+// PayOrderRequest запрос на оплату заказа
+message PayOrderRequest {
+  // order_uuid UUID заказа
+  string order_uuid = 1;
+
+  // user_uuid UUID пользователя, который инициирует оплату
+  string user_uuid = 2;
+
+  // payment_method выбранный способ оплаты
+  PaymentMethod payment_method = 3;
+}
+
+// PaymentMethod способ оплаты
+enum PaymentMethod {
+  //  UNKNOWN неизвестный способ
+  UNKNOWN = 0;
+
+  // CARD банковская карта
+  CARD = 1;
+
+  // SBP система быстрых платежей
+  SBP = 2;
+
+  // CREDIT_CARD кредитная карта
+  CREDIT_CARD = 3;
+
+  // INVESTOR_MONEY Деньги инвестора (внутренний метод)
+  INVESTOR_MONEY = 4;
+}
+
+// PayOrderResponse ответ с UUID транзакции оплаты
+message PayOrderResponse {
+  // transaction_uuid UUID транзакции оплаты
+  string transaction_uuid = 1;
+}
