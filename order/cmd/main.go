@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/ianagovitsyn/project/order/internal/migrator"
 	"log"
 	"net"
 	"net/http"
@@ -20,6 +21,9 @@ import (
 	orderV1 "github.com/ianagovitsyn/project/shared/pkg/openapi/order/v1"
 	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 	paymentV1 "github.com/ianagovitsyn/project/shared/pkg/proto/payment/v1"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -36,15 +40,48 @@ const (
 )
 
 func main() {
-	//inventoryConn := createConn(inventoryPort)
-	//paymentConn := createConn(paymentPort)
-	//
-	//service := &OrderService{
-	//	orders:          make(map[string]*orderV1.OrderDto),
-	//	inventoryClient: inventoryV1.NewInventoryServiceClient(inventoryConn),
-	//	paymentClient:   paymentV1.NewPaymentServiceClient(paymentConn),
-	//}
+	//Подключение к БД
+	ctx := context.Background()
 
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Printf("failed to load .env file: %v\n", err)
+		return
+	}
+
+	dbURI := os.Getenv("DB_URI")
+
+	// Создаем соединение с базой данных
+	con, err := pgx.Connect(ctx, dbURI)
+	if err != nil {
+		log.Printf("failed to connect to database: %v\n", err)
+		return
+	}
+	defer func() {
+		cerr := con.Close(ctx)
+		if cerr != nil {
+			log.Printf("failed to close connection: %v\n", cerr)
+		}
+	}()
+
+	// Проверяем, что соединение с базой установлено
+	err = con.Ping(ctx)
+	if err != nil {
+		log.Printf("База данных недоступна: %v\n", err)
+		return
+	}
+
+	// Инициализируем мигратор
+	migrationsDir := os.Getenv("MIGRATIONS_DIR")
+	migratorRunner := migrator.NewMigrator(stdlib.OpenDB(*con.Config().Copy()), migrationsDir)
+
+	err = migratorRunner.Up()
+	if err != nil {
+		log.Printf("Ошибка миграции базы данных: %v\n", err)
+		return
+	}
+
+	//Клиенты
 	paymentConn := createConn(paymentPort)
 	inventoryConn := createConn(inventoryPort)
 
@@ -53,6 +90,8 @@ func main() {
 
 	pClient := paymentClient.NewClient(paymentGenerated)
 	iClient := inventoryClient.NewClient(inventoryGenerated)
+
+	//Репозиторий
 	repository := orderRepository.NewRepository()
 
 	service := orderService.NewService(repository, pClient, iClient)
