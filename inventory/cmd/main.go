@@ -1,7 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net"
 	"os"
@@ -19,6 +23,45 @@ import (
 const grpcPort = 50051
 
 func main() {
+	ctx := context.Background()
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Printf("Не удалось загрузить файл .env: %v\n", err)
+		return
+	}
+
+	dbURI := os.Getenv("MONGO_URI")
+	if dbURI == "" {
+		log.Println("Ошибка: переменная окружения MONGO_URI не установлена")
+		return
+	}
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
+	if err != nil {
+		log.Printf("Ошибка подключения к MongoDB: %v\n", err)
+		return
+	}
+
+	defer func() {
+		if cerr := client.Disconnect(ctx); cerr != nil {
+			log.Printf("Ошибка при отключении от MongoDB: %v\n", cerr)
+		}
+	}()
+
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		log.Printf("MongoDB недоступна, ошибка ping: %v\n", err)
+		return
+	}
+	log.Println("Успешное подключение к MongoDB")
+
+	collection := client.Database("inventory").Collection("inventory")
+
+	repository := inventoryRepository.NewRepository(collection)
+	service := inventoryService.NewService(repository)
+	api := inventoryV1API.NewAPI(service)
+
 	// Создаем слушатель на порт
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	// Проверяем на ошибку
@@ -35,10 +78,6 @@ func main() {
 	}()
 
 	s := grpc.NewServer()
-
-	repository := inventoryRepository.NewRepository()
-	service := inventoryService.NewService(repository)
-	api := inventoryV1API.NewAPI(service)
 
 	inventoryV1.RegisterInventoryServiceServer(s, api)
 

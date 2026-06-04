@@ -1,19 +1,15 @@
 package order
 
 import (
-	"sync"
-
-	"github.com/ianagovitsyn/project/order/internal/model"
+	"github.com/jackc/pgx/v5"
 )
 
 type Repository struct {
-	mu sync.RWMutex
-
-	storage map[string]model.Order
+	DB *pgx.Conn
 }
 
-func NewRepository() *Repository {
+func NewRepository(DB *pgx.Conn) *Repository {
 	return &Repository{
-		storage: make(map[string]model.Order),
+		DB: DB,
 	}
 }

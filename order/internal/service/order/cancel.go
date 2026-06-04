@@ -14,7 +14,7 @@ func (s *Service) CancelOrder(ctx context.Context, orderUUID string) error {
 
 	if order.Status == "PENDING_PAYMENT" {
 		order.Status = "CANCELLED"
-		err := s.OrderRepository.Update(ctx, order)
+		err := s.OrderRepository.UpdateStatus(ctx, order)
 		if err != nil {
 			return err
 		}

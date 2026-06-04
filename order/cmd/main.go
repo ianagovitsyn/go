@@ -92,7 +92,7 @@ func main() {
 	iClient := inventoryClient.NewClient(inventoryGenerated)
 
 	//Репозиторий
-	repository := orderRepository.NewRepository()
+	repository := orderRepository.NewRepository(con)
 
 	service := orderService.NewService(repository, pClient, iClient)
 

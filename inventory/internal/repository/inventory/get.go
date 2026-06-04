@@ -2,18 +2,21 @@ package inventory
 
 import (
 	"context"
+	"errors"
+	repoModel "github.com/ianagovitsyn/project/inventory/internal/repository/model"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/ianagovitsyn/project/inventory/internal/model"
 	"github.com/ianagovitsyn/project/inventory/internal/repository/converter"
 )
 
-func (r *Repository) GetByUUID(_ context.Context, uuid string) (model.Part, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	part, ok := r.storage[uuid]
-	if !ok {
-		return model.Part{}, model.ErrOrderNotFound
+func (r *Repository) GetByUUID(ctx context.Context, uuid string) (model.Part, error) {
+	bsonUUID := bson.M{"_id": uuid}
+	var part repoModel.Part
+	err := r.collection.FindOne(ctx, bsonUUID).Decode(&part)
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return model.Part{}, repoModel.ErrNotFound
 	}
 
 	return converter.PartToModel(part), nil
