@@ -17,9 +17,9 @@ func (s *Service) OrderPay(ctx context.Context, paymentMethod model.PaymentMetho
 		return "", err
 	}
 
-	order.TransactionUUID = transactionUUID
+	order.TransactionUUID = &transactionUUID
 	order.Status = model.StatusPaid
-	order.PaymentMethod = paymentMethod
+	order.PaymentMethod = &paymentMethod
 
 	err = s.OrderRepository.UpdatePayment(ctx, order)
 	if err != nil {

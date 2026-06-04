@@ -2,6 +2,7 @@ package order
 
 import (
 	"context"
+	"fmt"
 	"github.com/ianagovitsyn/project/order/internal/repository/converter"
 	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 	"time"
@@ -17,7 +18,7 @@ func (r *Repository) UpdatePayment(ctx context.Context, o model.Order) error {
 		SET transaction_uuid = $1,
 		    payment_method = $2,
 		    status = $3,
-		    updated = $4
+		    updated_at = $4
 		WHERE uuid = $5`,
 		or.TransactionUUID,
 		or.PaymentMethod,
@@ -26,7 +27,7 @@ func (r *Repository) UpdatePayment(ctx context.Context, o model.Order) error {
 		or.OrderUUID,
 	)
 	if err != nil {
-		return repoModel.ErrFailedUpdate
+		return fmt.Errorf("%w: %w", repoModel.ErrFailedUpdate, err)
 	}
 	if tag.RowsAffected() == 0 {
 		return repoModel.ErrOrderNotFound
@@ -41,14 +42,14 @@ func (r *Repository) UpdateStatus(ctx context.Context, o model.Order) error {
 	tag, err := r.DB.Exec(ctx, `
 		UPDATE orders
 		SET status = $1,
-		    updated = $2
+		    updated_at = $2
 		WHERE uuid = $3`,
 		or.Status,
 		time.Now(),
 		or.OrderUUID,
 	)
 	if err != nil {
-		return repoModel.ErrFailedUpdate
+		return fmt.Errorf("%w: %w", repoModel.ErrFailedUpdate, err)
 	}
 	if tag.RowsAffected() == 0 {
 		return repoModel.ErrOrderNotFound

@@ -25,13 +25,11 @@ func (s *Service) CreateNewOrder(ctx context.Context, params model.CreateOrderPa
 	orderUuid := uuid.NewString()
 
 	order := model.Order{
-		OrderUUID:       orderUuid,
-		UserUUID:        params.UserUUID,
-		PartUuids:       params.PartUUIDs,
-		TotalPrice:      totalPrice,
-		TransactionUUID: "",
-		PaymentMethod:   "",
-		Status:          model.StatusPendingPayment,
+		OrderUUID:  orderUuid,
+		UserUUID:   params.UserUUID,
+		PartUuids:  params.PartUUIDs,
+		TotalPrice: totalPrice,
+		Status:     model.StatusPendingPayment,
 	}
 
 	err = s.OrderRepository.Insert(ctx, order)

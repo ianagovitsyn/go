@@ -16,6 +16,9 @@ func (a *Api) CancelOrder(ctx context.Context, params orderV1.CancelOrderParams)
 	if errors.Is(err, model.ErrConflict) {
 		return &orderV1.ConflictError{}, nil
 	}
+	if err != nil {
+		return nil, err
+	}
 
 	return &orderV1.CancelOrderNoContent{}, nil
 }

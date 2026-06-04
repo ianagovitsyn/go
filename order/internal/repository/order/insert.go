@@ -2,6 +2,7 @@ package order
 
 import (
 	"context"
+	"fmt"
 	"github.com/ianagovitsyn/project/order/internal/repository/converter"
 	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 
@@ -11,7 +12,7 @@ import (
 func (r *Repository) Insert(ctx context.Context, o model.Order) error {
 	ro := converter.OrderToRepo(o)
 	_, err := r.DB.Exec(ctx,
-		`INSERT INTO orders (uuid, user_uuid, part_uuds, total_price, transaction_uuid, payment_method, status
+		`INSERT INTO orders (uuid, user_uuid, part_uuids, total_price, transaction_uuid, payment_method, status)
 		VALUES($1, $2, $3, $4, $5, $6, $7)`,
 		ro.OrderUUID,
 		ro.UserUUID,
@@ -22,7 +23,7 @@ func (r *Repository) Insert(ctx context.Context, o model.Order) error {
 		ro.Status,
 	)
 	if err != nil {
-		return repoModel.ErrFailedInsert
+		return fmt.Errorf("%w: %w", repoModel.ErrFailedInsert, err)
 	}
 
 	return nil

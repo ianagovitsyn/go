@@ -39,16 +39,16 @@ func ModelToGetOrderResponse(order model.Order) *orderV1.OrderDto {
 		Status:     orderV1.OrderStatus(order.Status),
 	}
 
-	if order.TransactionUUID != "" {
+	if order.TransactionUUID != nil {
 		dto.TransactionUUID = orderV1.OptUUID{
-			Value: uuid.MustParse(order.TransactionUUID),
+			Value: uuid.MustParse(*order.TransactionUUID),
 			Set:   true,
 		}
 	}
 
-	if order.PaymentMethod != "" {
+	if order.PaymentMethod != nil {
 		dto.PaymentMethod = orderV1.OptPaymentMethod{
-			Value: orderV1.PaymentMethod(order.PaymentMethod),
+			Value: orderV1.PaymentMethod(*order.PaymentMethod),
 			Set:   true,
 		}
 	}
