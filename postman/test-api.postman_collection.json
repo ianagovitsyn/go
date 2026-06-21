@@ -1,0 +1,329 @@
+{
+  "info": {
+    "name": "Microservices API Tests",
+    "_postman_id": "test-api-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "part_uuid",
+      "value": ""
+    },
+    {
+      "key": "user_uuid",
+      "value": ""
+    },
+    {
+      "key": "order_uuid",
+      "value": ""
+    },
+    {
+      "key": "order2_uuid",
+      "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Generate user UUID once for the whole collection",
+          "if (!pm.collectionVariables.get('user_uuid') || pm.collectionVariables.get('user_uuid') === '') {",
+          "    pm.collectionVariables.set('user_uuid', pm.variables.replaceIn('{{$guid}}'));",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Test 4: Create Order",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Set part_uuid from gRPC test or use seed data",
+              "if (!pm.collectionVariables.get('part_uuid') || pm.collectionVariables.get('part_uuid') === '') {",
+              "    pm.collectionVariables.set('part_uuid', '550e8400-e29b-41d4-a716-446655440001');",
+              "}",
+              "",
+              "// Generate user UUID",
+              "if (!pm.collectionVariables.get('user_uuid') || pm.collectionVariables.get('user_uuid') === '') {",
+              "    pm.collectionVariables.set('user_uuid', pm.variables.replaceIn('{{$guid}}'));",
+              "}",
+              "console.log('User UUID: ' + pm.collectionVariables.get('user_uuid'));",
+              "console.log('Part UUID: ' + pm.collectionVariables.get('part_uuid'));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Order created successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.uuid).to.be.a('string').and.not.empty;",
+              "    pm.collectionVariables.set('order_uuid', json.uuid);",
+              "    console.log('Order UUID: ' + json.uuid);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_uuid\": \"{{user_uuid}}\",\n  \"part_uuids\": [\"{{part_uuid}}\"]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders"]
+        }
+      }
+    },
+    {
+      "name": "Test 5: Check status PENDING_PAYMENT",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Order status is PENDING_PAYMENT', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.status).to.include('PENDING_PAYMENT');",
+              "    console.log('Order status: ' + json.status);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order_uuid}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order_uuid}}"]
+        }
+      }
+    },
+    {
+      "name": "Test 6: Pay order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Payment successful', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var body = pm.response.text();",
+              "    pm.expect(body).to.not.include('error');",
+              "    console.log('Payment response: ' + body);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payment_method\": \"PAYMENT_METHOD_CARD\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order_uuid}}/pay",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order_uuid}}", "pay"]
+        }
+      }
+    },
+    {
+      "name": "Test 7: Check status PAID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Order status is PAID or ASSEMBLED', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    var validStatuses = json.status.includes('PAID') || json.status.includes('ASSEMBLED');",
+              "    pm.expect(validStatuses).to.be.true;",
+              "    console.log('Order status after payment: ' + json.status);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order_uuid}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order_uuid}}"]
+        }
+      }
+    },
+    {
+      "name": "Test 8: Create second order for cancellation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Second order created', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.uuid).to.be.a('string').and.not.empty;",
+              "    pm.collectionVariables.set('order2_uuid', json.uuid);",
+              "    console.log('Second order UUID: ' + json.uuid);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_uuid\": \"{{user_uuid}}\",\n  \"part_uuids\": [\"{{part_uuid}}\"]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders"]
+        }
+      }
+    },
+    {
+      "name": "Test 8b: Check second order PENDING_PAYMENT",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Second order status is PENDING_PAYMENT', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.status).to.include('PENDING_PAYMENT');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order2_uuid}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order2_uuid}}"]
+        }
+      }
+    },
+    {
+      "name": "Test 9a: Cancel second order",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Wait 2 seconds before cancellation",
+              "setTimeout(function() {}, 2000);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Cancel request sent', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order2_uuid}}/cancel",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order2_uuid}}", "cancel"]
+        }
+      }
+    },
+    {
+      "name": "Test 9b: Check status CANCELLED",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Small delay to let cancellation process",
+              "setTimeout(function() {}, 1000);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Second order is CANCELLED', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var json = pm.response.json();",
+              "    pm.expect(json.status).to.include('CANCELLED');",
+              "    console.log('Cancelled order status: ' + json.status);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/orders/{{order2_uuid}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "orders", "{{order2_uuid}}"]
+        }
+      }
+    }
+  ]
+}

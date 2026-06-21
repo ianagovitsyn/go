@@ -35,6 +35,9 @@ func PartToProto(part model.Part) *inventoryV1.Part {
 }
 
 func PartsFilterToModel(filter *inventoryV1.PartsFilter) *model.Filter {
+	if filter == nil {
+		return nil
+	}
 	categories := make([]model.Category, len(filter.Categories))
 	for i, c := range filter.Categories {
 		categories[i] = model.Category(c)
