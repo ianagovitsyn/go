@@ -4,16 +4,18 @@ package e2e
 
 import (
 	"context"
+	"os"
+	"time"
+
+	"github.com/testcontainers/testcontainers-go/wait"
+	"go.uber.org/zap"
+
 	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers/app"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers/mongo"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers/network"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers/path"
-	"github.com/testcontainers/testcontainers-go/wait"
-	"go.uber.org/zap"
-	"os"
-	"time"
 )
 
 const (

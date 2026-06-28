@@ -2,6 +2,12 @@ package app
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5"
+	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
 	orderV1API "github.com/ianagovitsyn/project/order/internal/api/order/v1"
 	grpcClient "github.com/ianagovitsyn/project/order/internal/client/grpc"
 	inventoryClient "github.com/ianagovitsyn/project/order/internal/client/grpc/inventory/v1"
@@ -16,10 +22,6 @@ import (
 	orderV1 "github.com/ianagovitsyn/project/shared/pkg/openapi/order/v1"
 	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 	paymentV1 "github.com/ianagovitsyn/project/shared/pkg/proto/payment/v1"
-	"github.com/jackc/pgx/v5"
-	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type diContainer struct {

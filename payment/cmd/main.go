@@ -3,14 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"go.uber.org/zap"
+
 	"github.com/ianagovitsyn/project/payment/internal/app"
 	"github.com/ianagovitsyn/project/payment/internal/config"
 	"github.com/ianagovitsyn/project/platform/pkg/closer"
 	"github.com/ianagovitsyn/project/platform/pkg/logger"
-	"go.uber.org/zap"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 const configPath = "./deploy/compose/payment/.env"

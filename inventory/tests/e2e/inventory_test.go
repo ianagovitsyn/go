@@ -4,12 +4,14 @@ package e2e
 
 import (
 	"context"
+
 	"github.com/brianvoe/gofakeit/v7"
-	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 )
 
 var _ = Describe("InventoryService", func() {

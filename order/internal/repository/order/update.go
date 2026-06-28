@@ -3,11 +3,11 @@ package order
 import (
 	"context"
 	"fmt"
-	"github.com/ianagovitsyn/project/order/internal/repository/converter"
-	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 	"time"
 
 	"github.com/ianagovitsyn/project/order/internal/model"
+	"github.com/ianagovitsyn/project/order/internal/repository/converter"
+	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 )
 
 func (r *Repository) UpdatePayment(ctx context.Context, o model.Order) error {

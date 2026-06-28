@@ -3,17 +3,18 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/ianagovitsyn/project/payment/internal/config"
-	"github.com/ianagovitsyn/project/platform/pkg/closer"
-	"github.com/ianagovitsyn/project/platform/pkg/grpc/health"
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
-	paymentV1 "github.com/ianagovitsyn/project/shared/pkg/proto/payment/v1"
 	"net"
 
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+
+	"github.com/ianagovitsyn/project/payment/internal/config"
+	"github.com/ianagovitsyn/project/platform/pkg/closer"
+	"github.com/ianagovitsyn/project/platform/pkg/grpc/health"
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
+	paymentV1 "github.com/ianagovitsyn/project/shared/pkg/proto/payment/v1"
 )
 
 type App struct {

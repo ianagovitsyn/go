@@ -18,7 +18,7 @@ func (s *OrderServiceSuite) TestCancelOrder_Success() {
 	cancelledOrder := order
 	cancelledOrder.Status = "CANCELLED"
 	s.repo.EXPECT().
-		Update(s.ctx, cancelledOrder).
+		UpdateStatus(s.ctx, cancelledOrder).
 		Return(nil)
 
 	err := s.service.CancelOrder(s.ctx, orderUUID)

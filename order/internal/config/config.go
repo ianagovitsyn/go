@@ -1,9 +1,11 @@
 package config
 
 import (
-	"github.com/ianagovitsyn/project/order/internal/config/env"
-	"github.com/joho/godotenv"
 	"os"
+
+	"github.com/joho/godotenv"
+
+	"github.com/ianagovitsyn/project/order/internal/config/env"
 )
 
 var appConfig *config

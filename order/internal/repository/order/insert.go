@@ -3,10 +3,10 @@ package order
 import (
 	"context"
 	"fmt"
-	"github.com/ianagovitsyn/project/order/internal/repository/converter"
-	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 
 	"github.com/ianagovitsyn/project/order/internal/model"
+	"github.com/ianagovitsyn/project/order/internal/repository/converter"
+	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 )
 
 func (r *Repository) Insert(ctx context.Context, o model.Order) error {

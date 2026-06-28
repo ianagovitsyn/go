@@ -2,6 +2,7 @@ package converter
 
 import (
 	"github.com/google/uuid"
+
 	"github.com/ianagovitsyn/project/order/internal/model"
 	orderV1 "github.com/ianagovitsyn/project/shared/pkg/openapi/order/v1"
 )

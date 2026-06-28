@@ -2,10 +2,10 @@ package inventory
 
 import (
 	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/ianagovitsyn/project/inventory/internal/repository/model"
 )
@@ -14,7 +14,7 @@ type Repository struct {
 	collection *mongo.Collection
 }
 
-func NewRepository(collection *mongo.Collection) *Repository {
+func NewRepository(ctx context.Context, collection *mongo.Collection) *Repository {
 	repo := &Repository{
 		collection: collection,
 	}
@@ -66,12 +66,10 @@ func NewRepository(collection *mongo.Collection) *Repository {
 		},
 	}
 
-	ctx := context.Background()
-	res, err := repo.collection.InsertMany(ctx, parts)
+	_, err := repo.collection.InsertMany(ctx, parts)
 	if err != nil {
 		log.Panic(err)
 	}
-	fmt.Printf("inserted documents with IDs %v\n", res.InsertedIDs)
 
 	return repo
 }

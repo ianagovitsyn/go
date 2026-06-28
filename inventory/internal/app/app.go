@@ -3,17 +3,18 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/ianagovitsyn/project/inventory/internal/config"
-	"github.com/ianagovitsyn/project/platform/pkg/closer"
-	"github.com/ianagovitsyn/project/platform/pkg/grpc/health"
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
-	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 	"net"
 
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+
+	"github.com/ianagovitsyn/project/inventory/internal/config"
+	"github.com/ianagovitsyn/project/platform/pkg/closer"
+	"github.com/ianagovitsyn/project/platform/pkg/grpc/health"
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
+	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
 )
 
 type App struct {

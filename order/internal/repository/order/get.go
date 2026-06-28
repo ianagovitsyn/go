@@ -2,10 +2,11 @@ package order
 
 import (
 	"context"
-	"github.com/ianagovitsyn/project/order/internal/repository/converter"
+
 	"github.com/jackc/pgx/v5"
 
 	"github.com/ianagovitsyn/project/order/internal/model"
+	"github.com/ianagovitsyn/project/order/internal/repository/converter"
 	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 )
 

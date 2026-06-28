@@ -1,6 +1,6 @@
 module github.com/ianagovitsyn/project/shared
 
-go 1.26.1
+go 1.25.0
 
 require (
 	github.com/go-faster/errors v0.7.1

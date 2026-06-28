@@ -14,10 +14,10 @@ type Service struct {
 	InventoryClient grpc.InventoryClient
 }
 
-func NewService(OrderRepository repository.OrderRepository, PaymentClient grpc.PaymentClient, InventoryClient grpc.InventoryClient) *Service {
+func NewService(orderRepository repository.OrderRepository, paymentClient grpc.PaymentClient, inventoryClient grpc.InventoryClient) *Service {
 	return &Service{
-		OrderRepository: OrderRepository,
-		PaymentClient:   PaymentClient,
-		InventoryClient: InventoryClient,
+		OrderRepository: orderRepository,
+		PaymentClient:   paymentClient,
+		InventoryClient: inventoryClient,
 	}
 }

@@ -6,13 +6,13 @@ import (
 	"context"
 	"database/sql"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"go.uber.org/zap"
+
 	"github.com/ianagovitsyn/project/order/internal/migrator"
 	orderRepo "github.com/ianagovitsyn/project/order/internal/repository/order"
 	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	"github.com/ianagovitsyn/project/platform/pkg/testcontainers/postgres"
-	"go.uber.org/zap"
-
-	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 const (

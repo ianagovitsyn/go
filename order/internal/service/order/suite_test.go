@@ -4,14 +4,15 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/suite"
+
 	grpcMocks "github.com/ianagovitsyn/project/order/internal/client/grpc/mocks"
 	repoMocks "github.com/ianagovitsyn/project/order/internal/repository/mocks"
-	"github.com/stretchr/testify/suite"
 )
 
 type OrderServiceSuite struct {
 	suite.Suite
-	ctx             context.Context
+	ctx             context.Context //nolint:containedctx
 	repo            *repoMocks.OrderRepository
 	paymentClient   *grpcMocks.PaymentClient
 	inventoryClient *grpcMocks.InventoryClient

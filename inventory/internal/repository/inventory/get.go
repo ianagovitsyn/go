@@ -3,12 +3,13 @@ package inventory
 import (
 	"context"
 	"errors"
-	repoModel "github.com/ianagovitsyn/project/inventory/internal/repository/model"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/ianagovitsyn/project/inventory/internal/model"
 	"github.com/ianagovitsyn/project/inventory/internal/repository/converter"
+	repoModel "github.com/ianagovitsyn/project/inventory/internal/repository/model"
 )
 
 func (r *Repository) GetByUUID(ctx context.Context, uuid string) (model.Part, error) {

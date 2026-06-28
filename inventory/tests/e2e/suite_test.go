@@ -5,15 +5,17 @@ package e2e
 import (
 	"context"
 	"fmt"
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
-	"github.com/joho/godotenv"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
-	"go.uber.org/zap"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+	"go.uber.org/zap"
+
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 const (

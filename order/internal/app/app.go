@@ -4,17 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v5/stdlib"
+	"go.uber.org/zap"
+
 	"github.com/ianagovitsyn/project/order/internal/config"
 	"github.com/ianagovitsyn/project/order/internal/migrator"
 	"github.com/ianagovitsyn/project/platform/pkg/closer"
 	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	orderV1 "github.com/ianagovitsyn/project/shared/pkg/openapi/order/v1"
-	"github.com/jackc/pgx/v5/stdlib"
-	"go.uber.org/zap"
-	"log"
-	"net/http"
-	"time"
 )
 
 type App struct {

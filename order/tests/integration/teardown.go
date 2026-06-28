@@ -5,8 +5,9 @@ package integration
 import (
 	"context"
 
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	"go.uber.org/zap"
+
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 func teardownTestEnvironment(ctx context.Context, env *TestEnvironment) {

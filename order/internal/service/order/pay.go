@@ -6,8 +6,8 @@ import (
 	"github.com/ianagovitsyn/project/order/internal/model"
 )
 
-func (s *Service) OrderPay(ctx context.Context, paymentMethod model.PaymentMethod, OrderUUID string) (string, error) {
-	order, err := s.OrderRepository.Get(ctx, OrderUUID)
+func (s *Service) OrderPay(ctx context.Context, paymentMethod model.PaymentMethod, orderUUID string) (string, error) {
+	order, err := s.OrderRepository.Get(ctx, orderUUID)
 	if err != nil {
 		return "", err
 	}

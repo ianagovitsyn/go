@@ -2,10 +2,14 @@ package inventory
 
 import (
 	"context"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.uber.org/zap"
+
 	"github.com/ianagovitsyn/project/inventory/internal/model"
 	"github.com/ianagovitsyn/project/inventory/internal/repository/converter"
 	modelRepo "github.com/ianagovitsyn/project/inventory/internal/repository/model"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 func (r *Repository) GetListByFilter(ctx context.Context, filter *model.Filter) ([]model.Part, error) {
@@ -33,7 +37,11 @@ func (r *Repository) GetListByFilter(ctx context.Context, filter *model.Filter) 
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			logger.Warn(ctx, "failed to close cursor", zap.Error(err))
+		}
+	}()
 
 	var parts []modelRepo.Part
 

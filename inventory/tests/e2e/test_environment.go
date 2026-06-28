@@ -4,11 +4,12 @@ package e2e
 
 import (
 	"context"
+	"os"
+	"time"
+
 	"github.com/brianvoe/gofakeit/v7"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"os"
-	"time"
 )
 
 func (env *TestEnvironment) ClearInventoryCollection(ctx context.Context) error {
@@ -23,7 +24,7 @@ func (env *TestEnvironment) ClearInventoryCollection(ctx context.Context) error 
 }
 
 func (env *TestEnvironment) InsertTestPart(ctx context.Context) (string, error) {
-	var partUUID = gofakeit.UUID()
+	partUUID := gofakeit.UUID()
 	part := bson.M{
 		"_id":            partUUID,
 		"name":           gofakeit.ProductName(),

@@ -8,9 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 const (

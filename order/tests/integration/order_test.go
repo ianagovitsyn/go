@@ -6,10 +6,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/ianagovitsyn/project/order/internal/model"
-	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/ianagovitsyn/project/order/internal/model"
+	repoModel "github.com/ianagovitsyn/project/order/internal/repository/model"
 )
 
 var _ = Describe("OrderRepository", func() {

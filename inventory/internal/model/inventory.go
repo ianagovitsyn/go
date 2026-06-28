@@ -17,7 +17,7 @@ type Part struct {
 	UpdatedAt     time.Time
 }
 
-type Category int
+type Category int32
 
 const (
 	CategoryUnknown Category = iota

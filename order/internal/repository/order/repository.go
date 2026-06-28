@@ -8,8 +8,8 @@ type Repository struct {
 	DB *pgx.Conn
 }
 
-func NewRepository(DB *pgx.Conn) *Repository {
+func NewRepository(db *pgx.Conn) *Repository {
 	return &Repository{
-		DB: DB,
+		DB: db,
 	}
 }

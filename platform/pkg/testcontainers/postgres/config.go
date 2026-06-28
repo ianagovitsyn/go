@@ -3,9 +3,10 @@ package postgres
 import (
 	"context"
 
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
 	"github.com/moby/moby/api/types/container"
 	"go.uber.org/zap"
+
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 type Logger interface {

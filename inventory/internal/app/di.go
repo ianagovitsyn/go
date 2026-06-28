@@ -3,6 +3,11 @@ package app
 import (
 	"context"
 	"fmt"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+
 	inventoryV1API "github.com/ianagovitsyn/project/inventory/internal/api/inventory/v1"
 	"github.com/ianagovitsyn/project/inventory/internal/config"
 	"github.com/ianagovitsyn/project/inventory/internal/repository"
@@ -11,9 +16,6 @@ import (
 	inventoryService "github.com/ianagovitsyn/project/inventory/internal/service/inventory"
 	"github.com/ianagovitsyn/project/platform/pkg/closer"
 	inventoryV1 "github.com/ianagovitsyn/project/shared/pkg/proto/inventory/v1"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type diContainer struct {
@@ -49,7 +51,7 @@ func (d *diContainer) InventoryService(ctx context.Context) service.InventorySer
 
 func (d *diContainer) InventoryRepository(ctx context.Context) repository.InventoryRepository {
 	if d.inventoryRepository == nil {
-		d.inventoryRepository = inventoryRepository.NewRepository(d.MongoDBCollection(ctx))
+		d.inventoryRepository = inventoryRepository.NewRepository(ctx, d.MongoDBCollection(ctx))
 	}
 
 	return d.inventoryRepository

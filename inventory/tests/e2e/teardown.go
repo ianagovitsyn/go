@@ -4,8 +4,10 @@ package e2e
 
 import (
 	"context"
-	"github.com/ianagovitsyn/project/platform/pkg/logger"
+
 	"go.uber.org/zap"
+
+	"github.com/ianagovitsyn/project/platform/pkg/logger"
 )
 
 // teardownTestEnvironment — освобождает все ресурсы тестового окружения
